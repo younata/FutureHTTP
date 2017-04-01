@@ -9,28 +9,41 @@ public protocol HTTPClient {
 extension URLSession: HTTPClient {
     public func request(_ request: URLRequest) -> Future<Result<HTTPResponse, HTTPClientError>> {
         let promise = Promise<Result<HTTPResponse, HTTPClientError>>()
-        self.dataTask(with: request) { data, response, error in
-            if let error = error as? NSError {
-                promise.resolve(.failure(NSURLErrorToHTTPClientError(error: error)))
-                return
-            }
-            guard let urlResponse = response as? HTTPURLResponse,
-                let data = data else {
-                    promise.resolve(.failure(.unknown))
+        #if os(Linux)
+            self.dataTask(with: request) { (data: Foundation.Data?, response: Foundation.URLResponse?, error: Foundation.NSError?) in
+                if let error = error {
+                    promise.resolve(.failure(NSURLErrorToHTTPClientError(error: error)))
                     return
-            }
-
-            let status = HTTPStatus(rawValue: urlResponse.statusCode)
-
-            let httpResponse = HTTPResponse(
-                body: data,
-                status: status,
-                mimeType: urlResponse.mimeType ?? "",
-                headers: (urlResponse.allHeaderFields as? [String: String]) ?? [:]
-            )
-            promise.resolve(.success(httpResponse))
-        }.resume()
+                }
+                self.handle(data: data, response: response, promise: promise)
+            }.resume()
+        #else
+            self.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    promise.resolve(.failure(NSURLErrorToHTTPClientError(error: error as NSError)))
+                    return
+                }
+                self.handle(data: data, response: response, promise: promise)
+            }.resume()
+        #endif
         return promise.future
+    }
+
+    private func handle(data: Data?, response: URLResponse?, promise: Promise<Result<HTTPResponse, HTTPClientError>>) {
+        guard let urlResponse = response as? HTTPURLResponse,
+            let data = data else {
+                promise.resolve(.failure(.unknown))
+                return
+        }
+        let status = HTTPStatus(rawValue: urlResponse.statusCode)
+
+        let httpResponse = HTTPResponse(
+            body: data,
+            status: status,
+            mimeType: urlResponse.mimeType ?? "",
+            headers: (urlResponse.allHeaderFields as? [String: String]) ?? [:]
+        )
+        promise.resolve(.success(httpResponse))
     }
 }
 

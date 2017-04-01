@@ -13,9 +13,14 @@ class FakeDataTask: URLSessionDataTask {
 }
 
 class FakeURLSession: URLSession {
+
+
     var requests: [URLRequest] = []
     var dataTasks = [FakeDataTask]()
     var lastCompletionHandler: (Data?, URLResponse?, NSError?) -> (Void) = {_, _, _ in }
+
+    #if !os(Linux)
+    // declarations from extensions cannot be overriden yet on linux.
     override func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
         requests.append(request)
         lastCompletionHandler = completionHandler
@@ -23,4 +28,5 @@ class FakeURLSession: URLSession {
         dataTasks.append(task)
         return task
     }
+    #endif
 }
