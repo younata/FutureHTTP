@@ -38,6 +38,10 @@
 		899B7DCD1E8D42E20067ABFF /* NSURLSession+HTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899B7DCA1E8D429B0067ABFF /* NSURLSession+HTTPClientTests.swift */; };
 		899B7DD01E8D44D90067ABFF /* FakeURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899B7DCE1E8D43AB0067ABFF /* FakeURLSession.swift */; };
 		899B7DD11E8D44DA0067ABFF /* FakeURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899B7DCE1E8D43AB0067ABFF /* FakeURLSession.swift */; };
+		899B7DD31E8F6D2C0067ABFF /* FakeHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899B7DD21E8F6D2C0067ABFF /* FakeHTTPClient.swift */; };
+		899B7DD41E8F6D2C0067ABFF /* FakeHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899B7DD21E8F6D2C0067ABFF /* FakeHTTPClient.swift */; };
+		899B7DD81E8F6DD60067ABFF /* FakeHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899B7DD51E8F6DC10067ABFF /* FakeHTTPClientTests.swift */; };
+		899B7DD91E8F6DD70067ABFF /* FakeHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899B7DD51E8F6DC10067ABFF /* FakeHTTPClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +122,8 @@
 		899B7DC41E8CD0BB0067ABFF /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
 		899B7DCA1E8D429B0067ABFF /* NSURLSession+HTTPClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLSession+HTTPClientTests.swift"; sourceTree = "<group>"; };
 		899B7DCE1E8D43AB0067ABFF /* FakeURLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeURLSession.swift; sourceTree = "<group>"; };
+		899B7DD21E8F6D2C0067ABFF /* FakeHTTPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeHTTPClient.swift; sourceTree = "<group>"; };
+		899B7DD51E8F6DC10067ABFF /* FakeHTTPClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeHTTPClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +194,7 @@
 		899B7D981E8CCA470067ABFF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				899B7DD21E8F6D2C0067ABFF /* FakeHTTPClient.swift */,
 				899B7D8E1E8CCA180067ABFF /* HTTPClient.swift */,
 				899B7D931E8CCA3B0067ABFF /* HTTPClientError.swift */,
 				899B7D991E8CCA980067ABFF /* HTTPResponse.swift */,
@@ -208,6 +215,7 @@
 		899B7D9F1E8CCBD60067ABFF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				899B7DD51E8F6DC10067ABFF /* FakeHTTPClientTests.swift */,
 				899B7DCE1E8D43AB0067ABFF /* FakeURLSession.swift */,
 				899B7DA01E8CCC860067ABFF /* HTTPClientErrorTests.swift */,
 				899B7DCA1E8D429B0067ABFF /* NSURLSession+HTTPClientTests.swift */,
@@ -449,6 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				899B7DD31E8F6D2C0067ABFF /* FakeHTTPClient.swift in Sources */,
 				899B7D8F1E8CCA180067ABFF /* HTTPClient.swift in Sources */,
 				899B7D941E8CCA3B0067ABFF /* HTTPClientError.swift in Sources */,
 				899B7D9A1E8CCA980067ABFF /* HTTPResponse.swift in Sources */,
@@ -459,6 +468,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				899B7DD81E8F6DD60067ABFF /* FakeHTTPClientTests.swift in Sources */,
 				899B7DD01E8D44D90067ABFF /* FakeURLSession.swift in Sources */,
 				899B7DA11E8CCC860067ABFF /* HTTPClientErrorTests.swift in Sources */,
 				899B7DCC1E8D42E10067ABFF /* NSURLSession+HTTPClientTests.swift in Sources */,
@@ -469,6 +479,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				899B7DD41E8F6D2C0067ABFF /* FakeHTTPClient.swift in Sources */,
 				899B7D921E8CCA180067ABFF /* HTTPClient.swift in Sources */,
 				899B7D971E8CCA3B0067ABFF /* HTTPClientError.swift in Sources */,
 				899B7D9D1E8CCA980067ABFF /* HTTPResponse.swift in Sources */,
@@ -479,6 +490,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				899B7DD91E8F6DD70067ABFF /* FakeHTTPClientTests.swift in Sources */,
 				899B7DD11E8D44DA0067ABFF /* FakeURLSession.swift in Sources */,
 				899B7DA31E8CCC860067ABFF /* HTTPClientErrorTests.swift in Sources */,
 				899B7DCD1E8D42E20067ABFF /* NSURLSession+HTTPClientTests.swift in Sources */,
