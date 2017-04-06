@@ -13,8 +13,6 @@ class FakeDataTask: URLSessionDataTask {
 }
 
 class FakeURLSession: URLSession {
-
-
     var requests: [URLRequest] = []
     var dataTasks = [FakeDataTask]()
     var lastCompletionHandler: (Data?, URLResponse?, NSError?) -> (Void) = {_, _, _ in }
