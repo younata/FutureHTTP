@@ -9,23 +9,20 @@ public protocol HTTPClient {
 extension URLSession: HTTPClient {
     public func request(_ request: URLRequest) -> Future<Result<HTTPResponse, HTTPClientError>> {
         let promise = Promise<Result<HTTPResponse, HTTPClientError>>()
-        #if os(Linux)
-            self.dataTask(with: request) { (data: Foundation.Data?, response: Foundation.URLResponse?, error: Foundation.NSError?) in
-                if let error = error {
+            self.dataTask(with: request) { data, response, error in
+                #if os(Linux)
+                if let error = error as? NSError {
                     promise.resolve(.failure(NSURLErrorToHTTPClientError(error: error)))
                     return
                 }
+                #else
+                    if let error = error {
+                        promise.resolve(.failure(NSURLErrorToHTTPClientError(error: error as NSError)))
+                        return
+                    }
+                #endif
                 self.handle(data: data, response: response, promise: promise)
-            }.resume()
-        #else
-            self.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    promise.resolve(.failure(NSURLErrorToHTTPClientError(error: error as NSError)))
-                    return
-                }
-                self.handle(data: data, response: response, promise: promise)
-            }.resume()
-        #endif
+        }.resume()
         return promise.future
     }
 
