@@ -1,4 +1,4 @@
-github "antitypical/result" "3.2.1"
+github "antitypical/result" "3.2.4"
 github "cbguder/cbgpromise" "v0.4.2"
-github "quick/nimble" "v6.1.0"
-github "quick/quick" "v1.1.0"
+github "quick/nimble" "v7.0.2"
+github "quick/quick" "v1.2.0"
