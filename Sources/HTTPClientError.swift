@@ -27,12 +27,12 @@ public enum HTTPClientError: Error, Equatable {
     }
 }
 
-public enum URLError: Error {
+public enum URLError: Error, CaseIterable {
     case bad
     case unsupported
 }
 
-public enum NetworkError: Error {
+public enum NetworkError: Error, CaseIterable {
     case cancelled
     case timedOut
     case cannotFindHost
@@ -42,7 +42,7 @@ public enum NetworkError: Error {
     case notConnectedToInternet
 }
 
-public enum HTTPError: Error {
+public enum HTTPError: Error, CaseIterable {
     case tooManyRedirects
     case resourceUnavailable
     case redirectToNonexistentLocation
@@ -55,7 +55,7 @@ public enum HTTPError: Error {
     case cannotParseResponse
 }
 
-public enum SecurityError: Error {
+public enum SecurityError: Error, CaseIterable {
     case appTransportSecurity
 
     case secureConnectionFailed
