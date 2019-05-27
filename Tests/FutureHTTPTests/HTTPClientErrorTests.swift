@@ -12,15 +12,11 @@ class HTTPClientErrorTests: QuickSpec {
             }
             it("domain is not NSURLErrorDomain") {
                 let error = NSError(domain: "dunno", code: 0, userInfo: nil)
-                expect(NSURLErrorToHTTPClientError(error: error)) == HTTPClientError.unknown
+                expect(NSURLErrorToHTTPClientError(error: error)) == HTTPClientError.unknown("Received non-NSURLErrorDomain error \(error)")
             }
 
             it("NSURLErrorUnknown") {
-                expect(clientError(NSURLErrorUnknown)) == HTTPClientError.unknown
-            }
-
-            it("NSURLErrorUnknown") {
-                expect(clientError(NSURLErrorUnknown)) == HTTPClientError.unknown
+                expect(clientError(NSURLErrorUnknown)) == HTTPClientError.unknown("Received unknown error: \(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil))")
             }
 
             it("NSURLErrorBadURL") {

@@ -1,5 +1,5 @@
 public enum HTTPClientError: Error, Equatable {
-    case unknown
+    case unknown(String) // Explanation
 
     case url(URLError)
 

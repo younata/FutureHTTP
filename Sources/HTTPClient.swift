@@ -11,9 +11,13 @@ extension URLSession: HTTPClient {
         let promise = Promise<Result<HTTPResponse, HTTPClientError>>()
             self.dataTask(with: request) { data, response, error in
                 #if os(Linux)
-                if let error = error as? NSError {
-                    promise.resolve(.failure(NSURLErrorToHTTPClientError(error: error)))
-                    return
+                if let error = error {
+                    if let nsError = error as? NSError {
+                        promise.resolve(.failure(NSURLErrorToHTTPClientError(error: nsError)))
+                        return
+                    } else {
+                        promise.resolve(.failure(.unknown("Unknown error \(error)")))
+                    }
                 }
                 #else
                     if let error = error {
@@ -29,7 +33,7 @@ extension URLSession: HTTPClient {
     private func handle(data: Data?, response: URLResponse?, promise: Promise<Result<HTTPResponse, HTTPClientError>>) {
         guard let urlResponse = response as? HTTPURLResponse,
             let data = data else {
-                promise.resolve(.failure(.unknown))
+                promise.resolve(.failure(.unknown("No data received from response")))
                 return
         }
         let status = HTTPStatus(rawValue: urlResponse.statusCode)
@@ -46,12 +50,12 @@ extension URLSession: HTTPClient {
 
 func NSURLErrorToHTTPClientError(error: NSError) -> HTTPClientError {
     guard error.domain == NSURLErrorDomain else {
-        return .unknown
+        return .unknown("Received non-NSURLErrorDomain error \(error)")
     }
     let failure: HTTPClientError
     switch error.code {
     case NSURLErrorUnknown:
-        failure = .unknown
+        failure = .unknown("Received unknown error: \(error)")
 
     case NSURLErrorBadURL:
         failure = .url(.bad)
@@ -117,7 +121,7 @@ func NSURLErrorToHTTPClientError(error: NSError) -> HTTPClientError {
         if #available(OSX 10.11, *), error.code == NSURLErrorAppTransportSecurityRequiresSecureConnection {
             failure = .security(.appTransportSecurity)
         } else {
-            failure = .unknown
+            failure = .unknown("Received unhandled error \(error)")
         }
     }
     return failure
