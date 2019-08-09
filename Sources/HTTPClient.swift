@@ -119,13 +119,8 @@ func NSURLErrorToHTTPClientError(error: NSError) -> HTTPClientError {
 
     default:
         let unknownError = HTTPClientError.unknown("Received unhandled error \(error)")
+#if os(macOS)
         if #available(OSX 10.11, *) {
-            if error.code == NSURLErrorAppTransportSecurityRequiresSecureConnection {
-                failure = .security(.appTransportSecurity)
-            } else {
-                failure = unknownError
-            }
-        } else if #available(iOS 9.0, *) {
             if error.code == NSURLErrorAppTransportSecurityRequiresSecureConnection {
                 failure = .security(.appTransportSecurity)
             } else {
@@ -134,6 +129,19 @@ func NSURLErrorToHTTPClientError(error: NSError) -> HTTPClientError {
         } else {
             failure = unknownError
         }
+#elseif os(iOS)
+        if #available(iOS 9.0, *) {
+            if error.code == NSURLErrorAppTransportSecurityRequiresSecureConnection {
+                failure = .security(.appTransportSecurity)
+            } else {
+                failure = unknownError
+            }
+        } else {
+            failure = unknownError
+        }
+#else
+        failure = unknownError
+#endif
     }
     return failure
 }
