@@ -1,4 +1,2 @@
 github "antitypical/result" "5.0.0"
 github "cbguder/cbgpromise" "v0.6.0"
-github "quick/nimble" "v8.0.2"
-github "quick/quick" "v2.1.0"

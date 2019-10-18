@@ -1,4 +1,7 @@
 import Foundation
+#if os(Linux)
+import FoundationNetworking
+#endif
 
 class FakeDataTask: URLSessionDataTask {
     var resumeCallCount: Int = 0

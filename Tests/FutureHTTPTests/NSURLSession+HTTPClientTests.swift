@@ -1,64 +1,66 @@
 import Foundation
-import Quick
-import Nimble
+#if os(Linux)
+import FoundationNetworking
+#endif
+import XCTest
 import CBGPromise
 import Result
 
 @testable import FutureHTTP
 
-#if !os(Linux)
-    // need to just assume this works on linux, for the time being :(
-class NSURLSessionHTTPClientTests: QuickSpec {
-    override func spec() {
-        var subject: FakeURLSession!
+class NSURLSessionHTTPClientTests: XCTestCase {
+    private let request = URLRequest(url: URL(string: "https://example.com")!)
+    private var subject: FakeURLSession!
+    private var future: Future<Result<HTTPResponse, HTTPClientError>>!
 
-        beforeEach {
-            subject = FakeURLSession()
-        }
+    override func setUp() {
+        super.setUp()
+        self.subject = FakeURLSession()
+        self.future = self.subject.request(self.request)
+    }
 
-        describe("request()") {
-            var future: Future<Result<HTTPResponse, HTTPClientError>>!
+    func testRequest_happyPath() {
+        self.assertSingleRequest()
+        self.assertStartsRequest()
 
-            let request = URLRequest(url: URL(string: "https://example.com")!)
-            beforeEach {
-                future = subject.request(request)
-            }
+        let data = "Hello World".data(using: .utf8)
+        let response = HTTPURLResponse(
+            url: URL(string: "https://example.com")!,
+            statusCode: 200,
+            httpVersion: nil,
+            headerFields: ["my": "header"]
+        )
+        self.subject.lastCompletionHandler(data, response, nil)
 
-            it("makes a single request") {
-                expect(subject.requests.count) == 1
-                expect(subject.requests.last) == request
-            }
+        XCTAssertNotNil(self.future.value, "Expected future to be resolved")
+        XCTAssertNil(self.future.value?.error, "Expected future to be resolved successfully")
+        XCTAssertEqual(
+            self.future.value?.value,
+            HTTPResponse(body: data!, status: .ok, mimeType: "", headers: ["my": "header"])
+        )
+    }
 
-            it("actually starts the task") {
-                expect(subject.dataTasks.last?.resumeCallCount) == 1
-                expect(subject.dataTasks.last?.cancelCallCount) == 0
-            }
+    func testRequest_sadPath() {
+        self.assertSingleRequest()
+        self.assertStartsRequest()
 
-            context("when the request succeeds") {
-                let data = "Hello World".data(using: .utf8)
-                let response = HTTPURLResponse(url: URL(string: "https://example.com")!, statusCode: 200, httpVersion: nil, headerFields: ["my": "header"])
-                beforeEach {
-                    subject.lastCompletionHandler(data, response, nil)
-                }
+        self.subject.lastCompletionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
 
-                it("resolves the promise with an http response") {
-                    expect(future.value).toNot(beNil())
-                    let expectedRespnose = HTTPResponse(body: data!, status: .ok, mimeType: "", headers: ["my": "header"])
-                    expect(future.value?.value).to(equal(expectedRespnose))
-                }
-            }
+        XCTAssertNotNil(self.future.value, "Expected future to be resolved")
+        XCTAssertNil(self.future.value?.value, "Expected future to have resolved with an error")
+        XCTAssertEqual(
+            self.future.value?.error,
+            HTTPClientError.url(.bad)
+        )
+    }
 
-            context("when the request errors out") {
-                beforeEach {
-                    subject.lastCompletionHandler(nil, nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
-                }
+    private func assertSingleRequest() {
+        XCTAssertEqual(self.subject.requests.count, 1)
+        XCTAssertEqual(self.subject.requests.last, request)
+    }
 
-                it("resolves the promise with an error depending on the result") {
-                    expect(future.value).toNot(beNil())
-                    expect(future.value?.error).to(equal(HTTPClientError.url(.bad)))
-                }
-            }
-        }
+    private func assertStartsRequest() {
+        XCTAssertEqual(self.subject.dataTasks.last?.resumeCallCount, 1)
+        XCTAssertEqual(self.subject.dataTasks.last?.cancelCallCount, 0)
     }
 }
-#endif
