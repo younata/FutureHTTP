@@ -9,15 +9,6 @@
           "revision": "136a811a40a50cc1ed8656396cd31365aa72ac8e",
           "version": "0.6.0"
         }
-      },
-      {
-        "package": "Result",
-        "repositoryURL": "https://github.com/antitypical/Result.git",
-        "state": {
-          "branch": null,
-          "revision": "12920a5c2595926efab9274d6003e29f503dbb66",
-          "version": "5.0.0"
-        }
       }
     ]
   },

@@ -3,7 +3,6 @@ import Foundation
 import FoundationNetworking
 #endif
 import CBGPromise
-import Result
 
 public protocol HTTPClient {
     func request(_ request: URLRequest) -> Future<Result<HTTPResponse, HTTPClientError>>

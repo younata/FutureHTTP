@@ -21,7 +21,7 @@ class FakeURLSession: URLSession {
     var lastCompletionHandler: (Data?, URLResponse?, NSError?) -> (Void) = {_, _, _ in }
 
     #if !os(Linux)
-    // declarations from extensions cannot be overriden yet on linux.
+    // dataTask(with:completionHandler:) is implemented in an extension.
     override func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
         requests.append(request)
         lastCompletionHandler = completionHandler

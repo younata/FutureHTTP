@@ -4,7 +4,6 @@ import FoundationNetworking
 #endif
 import XCTest
 import CBGPromise
-import Result
 
 @testable import FutureHTTP
 
@@ -15,7 +14,11 @@ class NSURLSessionHTTPClientTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        #if !os(Linux)
         self.subject = FakeURLSession()
+        #else
+        self.subject = FakeURLSession(configuration: .default)
+        #endif
         self.future = self.subject.request(self.request)
     }
 
@@ -62,5 +65,21 @@ class NSURLSessionHTTPClientTests: XCTestCase {
     private func assertStartsRequest() {
         XCTAssertEqual(self.subject.dataTasks.last?.resumeCallCount, 1)
         XCTAssertEqual(self.subject.dataTasks.last?.cancelCallCount, 0)
+    }
+}
+
+extension Result {
+    var value: Success? {
+        switch self {
+        case .success(let value): return value
+        case .failure: return nil
+        }
+    }
+
+    var error: Failure? {
+        switch self {
+        case .failure(let error): return error
+        case .success: return nil
+        }
     }
 }

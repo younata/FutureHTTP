@@ -4,7 +4,6 @@ import FoundationNetworking
 #endif
 import XCTest
 import CBGPromise
-import Result
 
 @testable import FutureHTTP
 

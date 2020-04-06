@@ -3,7 +3,6 @@ import Foundation
 import FoundationNetworking
 #endif
 import CBGPromise
-import Result
 
 public class FakeHTTPClient: HTTPClient {
     public private(set) var requestCallCount = 0
